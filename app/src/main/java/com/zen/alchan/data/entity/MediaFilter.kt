@@ -46,7 +46,8 @@ data class MediaFilter(
     var minUserPriority: Int? = null,
     var maxUserPriority: Int? = null,
     var isDoujin: Boolean? = null,
-    var onList: Boolean? = null
+    var onList: Boolean? = null,
+    var hideCompletedOnList: Boolean? = null
 ) {
     companion object {
         const val DEFAULT_MINIMUM_TAG_PERCENTAGE = 18

@@ -130,6 +130,10 @@ class FilterViewModel(
     val onlyShowSeriesOnList: Observable<Boolean>
         get() = _onlyShowSeriesOnList
 
+    private val _hideCompletedOnList = BehaviorSubject.createDefault(false)
+    val hideCompletedOnList: Observable<Boolean>
+        get() = _hideCompletedOnList
+
     private val _hideDoujin = BehaviorSubject.createDefault(false)
     val hideDoujin: Observable<Boolean>
         get() = _hideDoujin
@@ -384,6 +388,7 @@ class FilterViewModel(
                         _onlyShowDoujin.onNext(false)
                     }
                 }
+                _hideCompletedOnList.onNext(currentMediaFilter.hideCompletedOnList ?: false)
             }
 
 
@@ -727,6 +732,11 @@ class FilterViewModel(
 
         _onlyShowSeriesOnList.onNext(shouldOnlyShowSeriesOnList)
         syncShowHideOnList()
+    }
+
+    fun updateHideCompletedOnList(shouldHideCompletedOnList: Boolean) {
+        _hideCompletedOnList.onNext(shouldHideCompletedOnList)
+        currentMediaFilter.hideCompletedOnList = shouldHideCompletedOnList
     }
 
     private fun syncShowHideOnList() {

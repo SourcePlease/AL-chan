@@ -181,6 +181,10 @@ class FilterFragment : BaseFragment<FragmentFilterBinding, FilterViewModel>() {
                 viewModel.updateOnlyShowSeriesOnList(filterShowOnListCheckBox.isChecked)
             }
 
+            filterHideCompletedOnListCheckBox.setOnClickListener {
+                viewModel.updateHideCompletedOnList(filterHideCompletedOnListCheckBox.isChecked)
+            }
+
             filterHideDoujinCheckBox.setOnClickListener {
                 viewModel.updateHideDoujin(filterHideDoujinCheckBox.isChecked)
             }
@@ -289,6 +293,9 @@ class FilterFragment : BaseFragment<FragmentFilterBinding, FilterViewModel>() {
             },
             viewModel.onlyShowSeriesOnList.subscribe {
                 binding.filterShowOnListCheckBox.isChecked = it
+            },
+            viewModel.hideCompletedOnList.subscribe {
+                binding.filterHideCompletedOnListCheckBox.isChecked = it
             },
             viewModel.hideDoujin.subscribe {
                 binding.filterHideDoujinCheckBox.isChecked = it
@@ -449,6 +456,7 @@ class FilterFragment : BaseFragment<FragmentFilterBinding, FilterViewModel>() {
                 binding.filterPriorityLayout.show(it)
                 binding.filterHideOnListLayout.show(!it)
                 binding.filterShowOnListLayout.show(!it)
+                binding.filterHideCompletedOnListLayout.show(!it)
             },
             viewModel.tagFilterVisibility.subscribe {
                 binding.filterTagsLayout.show(it)
