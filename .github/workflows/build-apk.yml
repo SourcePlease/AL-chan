@@ -1,0 +1,59 @@
+name: Build Android APK (PR branch)
+
+on:
+  push:
+    branches:
+      - "ci/pr1-apk-build"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout PR code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: gradle
+
+      - name: Set up Android SDK packages
+        uses: android-actions/setup-android@v3
+        with:
+          packages: |
+            platform-tools
+            platforms;android-35
+            build-tools;35.0.0
+          accept-android-sdk-licenses: true
+
+      - name: Prepare API key properties
+        shell: bash
+        run: |
+          if [ ! -f apikey.properties ]; then
+            printf 'YOUTUBE_API_KEY="%s"\nSPOTIFY_API_KEY="%s"\n' \
+              "${YOUTUBE_API_KEY:-}" "${SPOTIFY_API_KEY:-}" > apikey.properties
+          fi
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          SPOTIFY_API_KEY: ${{ secrets.SPOTIFY_API_KEY }}
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
+      - name: Build debug APK
+        run: ./gradlew --no-daemon assembleDebug
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: AL-chan-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+          retention-days: 14
