@@ -167,7 +167,7 @@ class DefaultDialogManager(private val context: Context) : DialogManager {
             }
         })
         bottomSheetListDialog = BottomSheetListDialog.newInstance(adapter)
-        bottomSheetListDialog?.dialog?.setOnCancelListener {
+        bottomSheetListDialog?.dialog?.setOnDismissListener {
             bottomSheetListDialog = null
         }
         (context as? AppCompatActivity)?.supportFragmentManager?.let {
@@ -177,7 +177,7 @@ class DefaultDialogManager(private val context: Context) : DialogManager {
 
     override fun showListDialog(adapter: BaseRecyclerViewAdapter<*, *>) {
         bottomSheetListDialog = BottomSheetListDialog.newInstance(adapter)
-        bottomSheetListDialog?.dialog?.setOnCancelListener {
+        bottomSheetListDialog?.dialog?.setOnDismissListener {
             bottomSheetListDialog = null
         }
         (context as? AppCompatActivity)?.supportFragmentManager?.let {
@@ -237,7 +237,7 @@ class DefaultDialogManager(private val context: Context) : DialogManager {
             }
         })
         bottomSheetListDialog = BottomSheetListDialog.newInstance(adapter)
-        bottomSheetListDialog?.dialog?.setOnCancelListener {
+        bottomSheetListDialog?.dialog?.setOnDismissListener {
             bottomSheetListDialog = null
         }
         (context as? AppCompatActivity)?.supportFragmentManager?.let {
