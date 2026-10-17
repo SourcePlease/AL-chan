@@ -14,6 +14,7 @@ import com.zen.alchan.helper.enums.Sort
 import com.zen.alchan.helper.pojo.SaveItem
 import com.zen.alchan.helper.utils.NotInStorageException
 import com.zen.alchan.type.MediaSeason
+import com.zen.alchan.type.MediaListStatus
 import com.zen.alchan.type.MediaType
 import com.zen.alchan.type.ReviewRating
 import com.zen.alchan.type.UserTitleLanguage
@@ -94,7 +95,16 @@ class DefaultContentRepository(
         page: Int
     ): Observable<Page<Media>> {
         return contentDataSource.searchMedia(searchQuery, type, mediaFilter, page).map {
-            it.data?.convert() ?: Page()
+            val result = it.data?.convert() ?: Page()
+            if (mediaFilter?.hideCompletedOnList == true) {
+                result.copy(
+                    data = result.data.filterNot { media ->
+                        media.mediaListEntry?.status == MediaListStatus.COMPLETED
+                    }
+                )
+            } else {
+                result
+            }
         }
     }
 
