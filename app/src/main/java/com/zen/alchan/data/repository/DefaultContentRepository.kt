@@ -94,7 +94,18 @@ class DefaultContentRepository(
         page: Int
     ): Observable<Page<Media>> {
         return contentDataSource.searchMedia(searchQuery, type, mediaFilter, page).map {
-            it.data?.convert() ?: Page()
+            val result = it.data?.convert() ?: Page()
+            if (mediaFilter?.hideCompletedOnList == true) {
+                // SearchMediaQuery already requests each result's mediaListEntry.status.
+                // Remove titles the viewer has marked as completed from this result page.
+                result.copy(
+                    data = result.data.filterNot { media ->
+                        media.mediaListEntry?.status == MediaListStatus.COMPLETED
+                    }
+                )
+            } else {
+                result
+            }
         }
     }
 
